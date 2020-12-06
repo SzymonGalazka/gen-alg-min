@@ -19,6 +19,7 @@
 
 ul {
   display: flex;
+  justify-content: center;
   flex-flow: row wrap;
   list-style-type: none;
   font-size: 0.9em;
@@ -32,4 +33,21 @@ li {
   padding: 0.8em;
   border-radius: 4px;
   background-color: #aac8e1;
+  animation: fadein ease-in 0.2s;
+}
+
+input {
+  width: 45px;
+  height: 30px;
+  padding: 0.5em;
+  margin: 0.2em;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

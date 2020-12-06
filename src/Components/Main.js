@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Main.css';
+import { getColor, round } from './Helpers';
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
 
 const Main = () => {
   const [fun, setFun] = useState('mcCormick');
+  const [cormickX1, setCormickX1] = useState([-1.5, 4]);
+  const [cormickX2, setCormickX2] = useState([-3, 4]);
   const options = ['mcCormick', 'two', 'three'];
 
-  const runAlgorithm = (funName) => {
-    if (funName === options[0]) computeWithGA(-1.9133, mcCormick);
+  const runAlgorithm = () => {
+    if (fun === options[0])
+      computeWithGA(-1.9133, mcCormick, cormickX1, cormickX2);
   };
 
   const mcCormick = (x1, x2) =>
@@ -19,10 +23,11 @@ const Main = () => {
   const createResultItem = (name) => {
     let li = document.createElement('li');
     li.textContent = name;
+    li.style = `background-color: ${getColor()}`;
     return li;
   };
 
-  const computeWithGA = (target, testedFun) => {
+  const computeWithGA = (target, testedFun, x1boundary, x2boundary) => {
     document.querySelector('#results').innerHTML = '';
     class GlobalMinFinder extends Simulation {
       calculateFitness(individual, data) {
@@ -37,37 +42,38 @@ const Main = () => {
         return top.fitness === 1;
       }
     }
-
-    // Randomly create a character from the ASCII Table
     const generate = (min, max) => {
       const x = Math.random() * (max - min) + min;
       return x;
     };
 
-    // Create our chromosome
-    // We can leave out mutate to use the default implementation.
-    // The default implementation will call generate() on each gene
-    // if the random variable is less than the provided mutation rate
-    const x1 = new Chromosome(1, () => generate(-1.5, 4));
-    const x2 = new Chromosome(1, () => generate(-3, 4));
-    // Compose our individual
+    const x1 = new Chromosome(1, () =>
+      generate(parseInt(x1boundary[0]), parseInt(x1boundary[1]))
+    );
+    const x2 = new Chromosome(1, () =>
+      generate(parseInt(x2boundary[0]), parseInt(x2boundary[1]))
+    );
     const individual = new Individual([x1, x2]);
-
     const config = {
       prototype: individual,
       data: { target, testedFun },
-      mutationRate: 0.5,
+      mutationRate: 0.3,
       popSize: 100,
-      numParents: 10,
+      numParents: 2,
       maxGenerations: 100,
-      selection: genie.ga.Selection.stochasticUniversalSampling,
-      crossover: genie.ga.Crossover.uniform,
+      elitism: true,
+      selection: genie.ga.Selection.rouletteWheel,
+      crossover: genie.ga.Crossover.multipoint,
       onCalculateFitness(state) {
         console.log(state);
         document.querySelector('#results').appendChild(
           createResultItem(
-            `Gen ${state.currentGeneration}, Fitness: ${state.top.fitness}, \n
-              [${state.top.getDna(0)},${state.top.getDna(1)}]`
+            `Gen ${state.currentGeneration},\n Best Fitness: ${
+              state.top.fitness
+            }, \n
+              [${round(state.top.getDna(0)[0])},${round(
+              state.top.getDna(1)[0]
+            )}]`
           )
         );
         console.log(
@@ -85,7 +91,8 @@ const Main = () => {
   return (
     <div className='main'>
       <div className='row'>
-        <div>Select function</div>
+        {console.log(cormickX1)}
+        <h2>Select function</h2>
         <Dropdown
           options={options}
           onChange={(option) => setFun(option.value)}
@@ -94,7 +101,40 @@ const Main = () => {
         />
       </div>
       <div className='row'>
-        <button onClick={() => runAlgorithm(fun)}>Run algorithm</button>
+        <h3>Domain</h3>
+        {fun === 'mcCormick' && (
+          <>
+            <label>
+              x1
+              <input
+                type='number'
+                value={cormickX1[0]}
+                onChange={(e) => setCormickX1([e.target.value, cormickX1[1]])}
+              />
+              <input
+                type='number'
+                value={cormickX1[1]}
+                onChange={(e) => setCormickX1([cormickX1[0], e.target.value])}
+              />
+            </label>
+            <label>
+              x2
+              <input
+                type='number'
+                value={cormickX2[0]}
+                onChange={(e) => setCormickX2([e.target.value, cormickX2[0]])}
+              />
+              <input
+                type='number'
+                value={cormickX2[1]}
+                onChange={(e) => setCormickX2([cormickX2[0], e.target.value])}
+              />
+            </label>
+          </>
+        )}
+      </div>
+      <div className='row'>
+        <button onClick={() => runAlgorithm()}>Run algorithm</button>
       </div>
       <ul className='results' id='results'></ul>
     </div>
