@@ -1,6 +1,6 @@
 # Genetic Algorithm for LFSR
 
-This project uses Genetic Algorithm implementation to calculate the longest non-repeated LFSR cycle for given matrix (you can specify it in `Main.js` file).
+This project uses Genetic Algorithm implementation.
 
 ## Available Scripts
 
