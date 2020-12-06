@@ -1,153 +1,102 @@
 import React, { useState, useEffect } from 'react';
-import {
-  toDecimal,
-  toBinaryArrWithLeadingZeroes,
-  getRandomInt,
-  getColor,
-} from './Helpers';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 import './Main.css';
-import solveCycle from './solveCycle';
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
 
 const Main = () => {
-  const [gaData, setGaData] = useState([]);
+  const [fun, setFun] = useState('mcCormick');
+  const options = ['mcCormick', 'two', 'three'];
 
-  useEffect(() => {
-    computeWithGA();
-  }, []);
-
-  const matrix = [
-    [1, 0, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 1, 1],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 1, 1],
-  ];
-
-  const maxVal = toDecimal(matrix.map((row) => '1').join('')) + 1;
-
-  const computeManually = () => {
-    const solvedCycles = [...Array(maxVal)].map((_, i) =>
-      solveCycle(matrix, toBinaryArrWithLeadingZeroes(i, matrix.length))
-    );
-    return solvedCycles.reduce(
-      (acc, cycle) => (cycle.length > acc[1] ? [cycle, cycle.length] : acc),
-      [[], 0]
-    );
+  const runAlgorithm = (funName) => {
+    if (funName === options[0]) computeWithGA(-1.9133, mcCormick);
   };
 
-  const computeWithGA = () => {
-    let metaData = [];
-    class CycleFinder extends Simulation {
+  const mcCormick = (x1, x2) =>
+    Math.sin(x1 + x2) + (x1 - x2) * (x1 - x2) + 1.0 + 2.5 * x2 - 1.5 * x1;
+
+  const createResultItem = (name) => {
+    let li = document.createElement('li');
+    li.textContent = name;
+    return li;
+  };
+
+  const computeWithGA = (target, testedFun) => {
+    document.querySelector('#results').innerHTML = '';
+    class GlobalMinFinder extends Simulation {
       calculateFitness(individual, data) {
-        const cycle = solveCycle(matrix, individual.getDna(0));
-        let score = 0;
-        data.bestScore[0][0].forEach((gene, i) => {
-          if (gene === cycle[0][i]) ++score;
-        });
-        const fitness = score / data.bestScore[0][0].length;
-        return fitness;
+        const fitness = data.testedFun(
+          individual.getDna(0)[0],
+          individual.getDna(1)[0]
+        );
+        return fitness / data.target;
       }
+
       shouldFinish(top) {
-        const winCondition = top.fitness >= 1;
-        if (winCondition) setGaData(metaData);
-        return winCondition;
+        return top.fitness === 1;
       }
     }
 
-    const generateBinaryGene = () => getRandomInt(2);
+    // Randomly create a character from the ASCII Table
+    const generate = (min, max) => {
+      const x = Math.random() * (max - min) + min;
+      return x;
+    };
 
-    const binarySeed = new Chromosome(matrix.length, generateBinaryGene);
-
-    const binaryIndividual = new Individual(binarySeed);
+    // Create our chromosome
+    // We can leave out mutate to use the default implementation.
+    // The default implementation will call generate() on each gene
+    // if the random variable is less than the provided mutation rate
+    const x1 = new Chromosome(1, () => generate(-1.5, 4));
+    const x2 = new Chromosome(1, () => generate(-3, 4));
+    // Compose our individual
+    const individual = new Individual([x1, x2]);
 
     const config = {
-      prototype: binaryIndividual,
-      data: { bestScore },
-      mutationRate: 0.05,
-      popSize: 10,
-      numParents: 5,
+      prototype: individual,
+      data: { target, testedFun },
+      mutationRate: 0.5,
+      popSize: 100,
+      numParents: 10,
       maxGenerations: 100,
-      selection: genie.ga.Selection.rouletteWheel,
-      crossover: genie.ga.Crossover.multiPoint,
+      selection: genie.ga.Selection.stochasticUniversalSampling,
+      crossover: genie.ga.Crossover.uniform,
       onCalculateFitness(state) {
-        metaData.push({
-          avgFitness: state.averageFitness,
-          gen: state.currentGeneration,
-          top: state.top,
-          topCycle: solveCycle(matrix, state.top.dna[0].genes),
-        });
+        console.log(state);
+        document.querySelector('#results').appendChild(
+          createResultItem(
+            `Gen ${state.currentGeneration}, Fitness: ${state.top.fitness}, \n
+              [${state.top.getDna(0)},${state.top.getDna(1)}]`
+          )
+        );
+        console.log(
+          'Best fitness: ' + state.top.fitness,
+          state.top.getDna(0).join(''),
+          state.top.getDna(1).join('')
+        );
       },
     };
 
-    const cycles = new CycleFinder(config);
-    cycles.start();
+    const sim = new GlobalMinFinder(config);
+    sim.start();
   };
 
-  const bestScore = computeManually();
-  console.log(bestScore[0][0]);
   return (
     <div className='main'>
-      {/* <h2>Linear-feedback shift register</h2>
-      <div>
-        Companion matrix:
-        {matrix.map((row, i) => (
-          <div key={i} className='matrix-row'>
-            {row.map((q, i) => (
-              <div key={i} className='matrix-item'>
-                {q}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div> */}
-      <div className='solver-manual'>
-        <h4>Longest cycle (computed manually)</h4>
-        <div>Length: {bestScore[1]}</div>
-        <div className='solver-manual-cycle'>
-          {bestScore[0].map((node, i) => (
-            <p key={i}>
-              {node} ({toDecimal(node.join(''))})
-            </p>
-          ))}
-        </div>
+      <div className='row'>
+        <div>Select function</div>
+        <Dropdown
+          options={options}
+          onChange={(option) => setFun(option.value)}
+          value={fun}
+          placeholder='Select function'
+        />
       </div>
-      <div>
-        <h3>Computed using Genetic Algorithm (refresh for another set): </h3>
+      <div className='row'>
+        <button onClick={() => runAlgorithm(fun)}>Run algorithm</button>
       </div>
-      {gaData.length > 0 && (
-        <div className='solver-list'>
-          {gaData.map((iteration, i) => (
-            <div
-              key={i}
-              className='solver-ga'
-              style={{ backgroundColor: getColor() }}
-            >
-              {console.log(iteration)}
-              <h3>Generation #{iteration.gen}</h3>
-              <div>
-                Avg gen fitness ({(iteration.avgFitness / 1).toFixed(4)})
-              </div>
-              <div>Leading seed: ({iteration.top.dna[0].genes})</div>
-
-              {i === gaData.length - 1 && (
-                <>
-                  <div>Top cycle ({iteration.topCycle.length}):</div>
-                  <div>
-                    {iteration.topCycle.map((node, i) => (
-                      <p key={i}>
-                        {node} ({toDecimal(node.join(''))})
-                      </p>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <ul className='results' id='results'></ul>
     </div>
   );
 };
