@@ -90,7 +90,7 @@ const Main = () => {
   console.log(bestScore[0][0]);
   return (
     <div className='main'>
-      <h2>Linear-feedback shift register</h2>
+      {/* <h2>Linear-feedback shift register</h2>
       <div>
         Companion matrix:
         {matrix.map((row, i) => (
@@ -102,7 +102,7 @@ const Main = () => {
             ))}
           </div>
         ))}
-      </div>
+      </div> */}
       <div className='solver-manual'>
         <h4>Longest cycle (computed manually)</h4>
         <div>Length: {bestScore[1]}</div>
