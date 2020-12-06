@@ -1,8 +1,10 @@
-# Genetic Algorithm for LFSR
+# Genetic Algorithm for Test Functions
 
-This project uses Genetic Algorithm implementation.
+This project uses Genetic Algorithm to find global minima of example functions.
 
 ## Available Scripts
+
+Make sure you have node >= 10.0 installed locally.
 
 ### `npm install`
 
