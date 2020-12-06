@@ -1,6 +1,6 @@
 {
-  "homepage": "http://SzymonGalazka.github.io/lfsr",
-  "name": "lfsr",
+  "homepage": "http://SzymonGalazka.github.io/gen-alg-min",
+  "name": "gen-alg-min",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
