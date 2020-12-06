@@ -71,7 +71,7 @@ const Main = () => {
       numParents: 5,
       maxGenerations: 100,
       selection: genie.ga.Selection.rouletteWheel,
-      crossover: genie.ga.Crossover.singlePoint,
+      crossover: genie.ga.Crossover.multiPoint,
       onCalculateFitness(state) {
         metaData.push({
           avgFitness: state.averageFitness,
