@@ -9,7 +9,7 @@ const createResultItem = (name) => {
   return li;
 };
 
-const mcCormickGA = (target, testedFun, x1boundary, x2boundary) => {
+const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   document.querySelector('#results').innerHTML = '';
   class GlobalMinFinder extends Simulation {
     calculateFitness(individual, data) {
@@ -30,20 +30,20 @@ const mcCormickGA = (target, testedFun, x1boundary, x2boundary) => {
   };
 
   const x1 = new Chromosome(1, () =>
-    generate(parseInt(x1boundary[0]), parseInt(x1boundary[1]))
+    generate(parseFloat(x1boundary[0]), parseFloat(x1boundary[1]))
   );
   const x2 = new Chromosome(1, () =>
-    generate(parseInt(x2boundary[0]), parseInt(x2boundary[1]))
+    generate(parseFloat(x2boundary[0]), parseFloat(x2boundary[1]))
   );
   const individual = new Individual([x1, x2]);
   const config = {
     prototype: individual,
     data: { target, testedFun },
-    mutationRate: 0.3,
-    popSize: 100,
-    numParents: 2,
-    maxGenerations: 100,
-    elitism: true,
+    mutationRate: parseFloat(settings.mutationRate),
+    popSize: parseFloat(settings.popSize),
+    numParents: parseFloat(settings.numParents),
+    maxGenerations: parseFloat(settings.maxGenerations),
+    elitism: settings.elitism,
     selection: genie.ga.Selection.rouletteWheel,
     crossover: genie.ga.Crossover.multipoint,
     onCalculateFitness(state) {

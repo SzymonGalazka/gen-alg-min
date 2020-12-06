@@ -8,11 +8,18 @@ const Main = () => {
   const [fun, setFun] = useState('mcCormick');
   const [cormickX1, setCormickX1] = useState([-1.5, 4]);
   const [cormickX2, setCormickX2] = useState([-3, 4]);
+  const [settings, setSettings] = useState({
+    mutationRate: 0.3,
+    popSize: 100,
+    numParents: 2,
+    maxGenerations: 100,
+    elitism: true,
+  });
   const options = ['mcCormick', 'two', 'three'];
 
   const runAlgorithm = () => {
     if (fun === options[0])
-      mcCormickGA(-1.9133, mcCormick, cormickX1, cormickX2);
+      mcCormickGA(-1.9133, mcCormick, cormickX1, cormickX2, settings);
   };
   const mcCormick = (x1, x2) =>
     Math.sin(x1 + x2) + (x1 - x2) * (x1 - x2) + 1.0 + 2.5 * x2 - 1.5 * x1;
@@ -61,6 +68,48 @@ const Main = () => {
             </label>
           </>
         )}
+      </div>
+      <div className='settings'>
+        <label>
+          Mutation rate
+          <input
+            type='number'
+            value={settings.mutationRate}
+            onChange={(e) =>
+              setSettings({ ...settings, mutationRate: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Population size
+          <input
+            type='number'
+            value={settings.popSize}
+            onChange={(e) =>
+              setSettings({ ...settings, popSize: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Number of parents
+          <input
+            type='number'
+            value={settings.numParents}
+            onChange={(e) =>
+              setSettings({ ...settings, numParents: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Max generations
+          <input
+            type='number'
+            value={settings.maxGenerations}
+            onChange={(e) =>
+              setSettings({ ...settings, maxGenerations: e.target.value })
+            }
+          />
+        </label>
       </div>
       <div className='row'>
         <button onClick={() => runAlgorithm()}>Run algorithm</button>
