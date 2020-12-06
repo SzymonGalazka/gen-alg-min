@@ -9,7 +9,7 @@ const createResultItem = (name) => {
   return li;
 };
 
-const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
+const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   document.querySelector('#results').innerHTML = '';
   class GlobalMinFinder extends Simulation {
     calculateFitness(individual, data) {
@@ -17,11 +17,11 @@ const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
         individual.getDna(0)[0],
         individual.getDna(1)[0]
       );
-      return fitness / data.target;
+      return 1 / fitness;
     }
 
     shouldFinish(top) {
-      return top.fitness >= 0.9999 && top.fitness <= 1.0001;
+      return top.fitness === 1;
     }
   }
   const generate = (min, max) => {
@@ -44,8 +44,9 @@ const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
     numParents: parseFloat(settings.numParents),
     maxGenerations: parseFloat(settings.maxGenerations),
     elitism: settings.elitism,
+    optimizer: genie.ga.Optimizer.maximizer,
     selection: genie.ga.Selection.rouletteWheel,
-    crossover: genie.ga.Crossover.multipoint,
+    crossover: genie.ga.Crossover.singlePoint,
     onCalculateFitness(state) {
       console.log(state);
       document.querySelector('#results').appendChild(
@@ -70,4 +71,4 @@ const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   sim.start();
 };
 
-export default mcCormickGA;
+export default eggGA;

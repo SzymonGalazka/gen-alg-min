@@ -9,13 +9,14 @@ const createResultItem = (name) => {
   return li;
 };
 
-const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
+const michalewiczGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   document.querySelector('#results').innerHTML = '';
   class GlobalMinFinder extends Simulation {
     calculateFitness(individual, data) {
       const fitness = data.testedFun(
         individual.getDna(0)[0],
-        individual.getDna(1)[0]
+        individual.getDna(1)[0],
+        10
       );
       return fitness / data.target;
     }
@@ -70,4 +71,4 @@ const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   sim.start();
 };
 
-export default mcCormickGA;
+export default michalewiczGA;
