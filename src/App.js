@@ -9,7 +9,7 @@ function App() {
         <span>Szymon Galazka 2020</span>
         <a
           className='App-link'
-          href='https://github.com/SzymonGalazka/lfsr'
+          href='https://github.com/SzymonGalazka/gen-alg-min'
           target='_blank'
           rel='noopener noreferrer'
         >
