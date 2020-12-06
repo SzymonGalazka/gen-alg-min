@@ -37,10 +37,14 @@ li {
 }
 
 input {
-  width: 45px;
+  width: 60px;
   height: 30px;
   padding: 0.5em;
   margin: 0.2em;
+  font-size: 1em;
+  border: none;
+  background-color: #eaeaea;
+  border-radius: 4px;
 }
 
 @keyframes fadein {
