@@ -35,6 +35,7 @@ const Main = () => {
   ];
 
   const runAlgorithm = () => {
+    document.querySelector('#metadata').innerHTML = '[Results]';
     if (fun === options[0])
       mcCormickGA(-1.9133, mcCormick, cormickX, cormickY, settings);
     if (fun === options[1]) eggGA(0.0, eggCrate, eggX, eggY, settings);
@@ -76,11 +77,14 @@ const Main = () => {
   return (
     <div className='main'>
       <div className='row'>
-        {console.log(cormickX)}
         <h2>Select function</h2>
         <Dropdown
           options={options}
-          onChange={(option) => setFun(option.value)}
+          onChange={(option) => {
+            document.querySelector('#metadata').innerHTML = '[Results]';
+            document.querySelector('#results').innerHTML = '';
+            setFun(option.value);
+          }}
           value={fun}
           placeholder='Select function'
         />
@@ -270,7 +274,12 @@ const Main = () => {
         )}
       </div>
       <div className='config'>
-        <div className='metadata' id='metadata'></div>
+        <div className='metadata'>
+          <div className='metadata-best' id='metadata'>
+            [Results]
+          </div>
+          <div className='metadata-plot' id='plot'></div>
+        </div>
         <div className='settings'>
           <label>
             Mutation rate

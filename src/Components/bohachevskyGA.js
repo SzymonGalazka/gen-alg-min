@@ -1,4 +1,9 @@
-import { round, createBestItem, createResultItem, onCalculate } from './Helpers';
+import {
+  round,
+  createBestItem,
+  createResultItem,
+  onCalculate,
+} from './Helpers';
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
 
@@ -20,7 +25,10 @@ const bochachevskyGA = (
     }
 
     shouldFinish(top) {
-      return top.fitness >= 0.9999 && top.fitness <= 1.0001;
+      if (top.fitness >= 0.9999 && top.fitness <= 1.0001) {
+        return true;
+      }
+      return false;
     }
   }
   const generate = (min, max) => {

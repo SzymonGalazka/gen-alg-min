@@ -32,21 +32,22 @@ export const createBestItem = (name) => {
 
 export const onCalculate = (state) => {
   console.log(state);
+
   document.querySelector('#results').appendChild(
     createResultItem(
       `Gen ${state.currentGeneration}, Best fitness: ${state.top.fitness}, \n
-          [${round(state.top.getDna(0)[0])},${round(state.top.getDna(1)[0])}]`
+          x1=${round(state.top.getDna(0)[0])}, x2=${round(
+        state.top.getDna(1)[0]
+      )}`
     )
   );
   if (state.currentGeneration === state.maxGenerations) {
-    document.querySelector('#metadata').innerHTML = '';
-    document.querySelector('#metadata').appendChild(
-      createBestItem(
-        `Gen ${state.currentGeneration}, Best fitness: ${state.top.fitness}, \n
-            x1=${round(state.top.getDna(0)[0])}, x2=${round(
-          state.top.getDna(1)[0]
-        )}`
-      )
+    const el = document.querySelector('#metadata');
+    el.appendChild(createBestItem(`Gen ${state.currentGeneration}`));
+    el.appendChild(createBestItem(`Best fitness: ${state.top.fitness}`));
+    el.appendChild(
+      createBestItem(`
+    x1=${round(state.top.getDna(0)[0])}, x2=${round(state.top.getDna(1)[0])}`)
     );
   }
 

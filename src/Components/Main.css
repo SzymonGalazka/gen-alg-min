@@ -24,8 +24,24 @@
 }
 
 .metadata {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   margin-left: 25%;
+}
+
+.metadata-best {
+  display: flex;
+  padding: 1em;
+  flex-direction: column;
+  background-color: #343647;
+  color: #eee;
+  border-radius: 4px;
+  font-size: 1.4em;
+}
+
+.metadata-best > * {
+  animation: fadein ease-in 0.3s;
 }
 
 .settings {
