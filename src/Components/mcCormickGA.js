@@ -1,13 +1,11 @@
-import { round, getColor } from './Helpers';
+import {
+  round,
+  createBestItem,
+  createResultItem,
+  onCalculate,
+} from './Helpers';
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
-
-const createResultItem = (name) => {
-  let li = document.createElement('li');
-  li.textContent = name;
-  li.style = `background-color: ${getColor()}`;
-  return li;
-};
 
 const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   document.querySelector('#results').innerHTML = '';
@@ -47,22 +45,7 @@ const mcCormickGA = (target, testedFun, x1boundary, x2boundary, settings) => {
     selection: genie.ga.Selection.rouletteWheel,
     crossover: genie.ga.Crossover.multipoint,
     onCalculateFitness(state) {
-      console.log(state);
-      document.querySelector('#results').appendChild(
-        createResultItem(
-          `Gen ${state.currentGeneration}, Best fitness: ${
-            state.top.fitness
-          }, \n
-              [${round(state.top.getDna(0)[0])},${round(
-            state.top.getDna(1)[0]
-          )}]`
-        )
-      );
-      console.log(
-        'Best fitness: ' + state.top.fitness,
-        state.top.getDna(0).join(''),
-        state.top.getDna(1).join('')
-      );
+      onCalculate(state);
     },
   };
 

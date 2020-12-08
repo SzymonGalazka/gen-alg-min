@@ -15,3 +15,44 @@ export const getColor = () =>
 
 export const round = (num) =>
   Math.round((num + Number.EPSILON) * 10000) / 10000;
+
+export const createResultItem = (name) => {
+  let li = document.createElement('li');
+  li.textContent = name;
+  li.style = `background-color: ${getColor()}`;
+  return li;
+};
+
+export const createBestItem = (name) => {
+  let div = document.createElement('div');
+  div.textContent = name;
+  div.className = 'best-score';
+  return div;
+};
+
+export const onCalculate = (state) => {
+  console.log(state);
+  document.querySelector('#results').appendChild(
+    createResultItem(
+      `Gen ${state.currentGeneration}, Best fitness: ${state.top.fitness}, \n
+          [${round(state.top.getDna(0)[0])},${round(state.top.getDna(1)[0])}]`
+    )
+  );
+  if (state.currentGeneration === state.maxGenerations) {
+    document.querySelector('#metadata').innerHTML = '';
+    document.querySelector('#metadata').appendChild(
+      createBestItem(
+        `Gen ${state.currentGeneration}, Best fitness: ${state.top.fitness}, \n
+            x1=${round(state.top.getDna(0)[0])}, x2=${round(
+          state.top.getDna(1)[0]
+        )}`
+      )
+    );
+  }
+
+  console.log(
+    'Best fitness: ' + state.top.fitness,
+    state.top.getDna(0).join(''),
+    state.top.getDna(1).join('')
+  );
+};

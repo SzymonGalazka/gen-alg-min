@@ -2,7 +2,13 @@ import { round, createBestItem, createResultItem, onCalculate } from './Helpers'
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
 
-const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
+const bochachevskyGA = (
+  target,
+  testedFun,
+  x1boundary,
+  x2boundary,
+  settings
+) => {
   document.querySelector('#results').innerHTML = '';
   class GlobalMinFinder extends Simulation {
     calculateFitness(individual, data) {
@@ -14,7 +20,7 @@ const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
     }
 
     shouldFinish(top) {
-      return top.fitness === 1;
+      return top.fitness >= 0.9999 && top.fitness <= 1.0001;
     }
   }
   const generate = (min, max) => {
@@ -34,12 +40,12 @@ const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
     data: { target, testedFun },
     mutationRate: parseFloat(settings.mutationRate),
     popSize: parseFloat(settings.popSize),
+    optimizer: genie.ga.Optimizer.maximizer,
     numParents: parseFloat(settings.numParents),
     maxGenerations: parseFloat(settings.maxGenerations),
     elitism: settings.elitism,
-    optimizer: genie.ga.Optimizer.maximizer,
     selection: genie.ga.Selection.rouletteWheel,
-    crossover: genie.ga.Crossover.singlePoint,
+    crossover: genie.ga.Crossover.multipoint,
     onCalculateFitness(state) {
       onCalculate(state);
     },
@@ -49,4 +55,4 @@ const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
   sim.start();
 };
 
-export default eggGA;
+export default bochachevskyGA;
