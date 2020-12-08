@@ -6,6 +6,10 @@ import mcCormickGA from './mcCormickGA';
 import eggGA from './eggGA';
 import michalewiczGA from './michalewiczGA';
 import bochachevskyGA from './bohachevskyGA';
+import Plotly from 'plotly.js-basic-dist';
+
+import createPlotlyComponent from 'react-plotly.js/factory';
+const Plot = createPlotlyComponent(Plotly);
 
 const Main = () => {
   const [fun, setFun] = useState('mcCormick');
@@ -278,7 +282,21 @@ const Main = () => {
           <div className='metadata-best' id='metadata'>
             [Results]
           </div>
-          <div className='metadata-plot' id='plot'></div>
+          <div className='metadata-plot' id='plot'>
+            <Plot
+              data={[
+                {
+                  x: [1, 2, 3],
+                  y: [2, 6, 3],
+                  type: 'scatter',
+                  mode: 'lines+markers',
+                  marker: { color: 'red' },
+                },
+                { type: 'bar', x: [1, 2, 3], y: [2, 5, 3] },
+              ]}
+              layout={{ width: 320, height: 240, title: 'A Fancy Plot' }}
+            />
+          </div>
         </div>
         <div className='settings'>
           <label>
