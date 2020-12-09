@@ -6,10 +6,19 @@ import mcCormickGA from './mcCormickGA';
 import eggGA from './eggGA';
 import michalewiczGA from './michalewiczGA';
 import bochachevskyGA from './bohachevskyGA';
-import Plotly from 'plotly.js-basic-dist';
-
-import createPlotlyComponent from 'react-plotly.js/factory';
-const Plot = createPlotlyComponent(Plotly);
+import Plot from 'react-plotly.js';
+// import Plotly from 'plotly.js-basic-dist';
+// import createPlotlyComponent from 'react-plotly.js/factory';
+// const Plot = createPlotlyComponent(Plotly);
+function randomValues(num, mul) {
+  const arr = [];
+  const index = [];
+  for (let i = 0; i < num; i++) {
+    arr.push(Math.random() * mul);
+    index.push(i);
+  }
+  return { index, arr };
+}
 
 const Main = () => {
   const [fun, setFun] = useState('mcCormick');
@@ -77,6 +86,20 @@ const Main = () => {
     0.3 * Math.cos(3 * Math.PI * x) -
     0.4 * Math.cos(4 * Math.PI * y) +
     0.7;
+
+
+  const traces = Array(3)
+    .fill(0)
+    .map((_, i) => {
+      const { index, arr } = randomValues(20, 3);
+      return {
+        x: Array(20).fill(i),
+        y: index,
+        z: arr,
+        type: 'scatter3d',
+        mode: 'lines',
+      };
+    });
 
   return (
     <div className='main'>
@@ -284,17 +307,12 @@ const Main = () => {
           </div>
           <div className='metadata-plot' id='plot'>
             <Plot
-              data={[
-                {
-                  x: [1, 2, 3],
-                  y: [2, 6, 3],
-                  type: 'scatter',
-                  mode: 'lines+markers',
-                  marker: { color: 'red' },
-                },
-                { type: 'bar', x: [1, 2, 3], y: [2, 5, 3] },
-              ]}
-              layout={{ width: 320, height: 240, title: 'A Fancy Plot' }}
+              data={traces}
+              layout={{
+                width: 900,
+                height: 800,
+                title: `Simple 3D Scatter`,
+              }}
             />
           </div>
         </div>
