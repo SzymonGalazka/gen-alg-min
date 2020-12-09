@@ -4,21 +4,13 @@ import 'react-dropdown/style.css';
 import './Main.css';
 import mcCormickGA from './mcCormickGA';
 import eggGA from './eggGA';
+import { range } from './Helpers';
 import michalewiczGA from './michalewiczGA';
 import bochachevskyGA from './bohachevskyGA';
 import Plot from 'react-plotly.js';
 // import Plotly from 'plotly.js-basic-dist';
 // import createPlotlyComponent from 'react-plotly.js/factory';
 // const Plot = createPlotlyComponent(Plotly);
-function randomValues(num, mul) {
-  const arr = [];
-  const index = [];
-  for (let i = 0; i < num; i++) {
-    arr.push(Math.random() * mul);
-    index.push(i);
-  }
-  return { index, arr };
-}
 
 const Main = () => {
   const [fun, setFun] = useState('mcCormick');
@@ -66,7 +58,7 @@ const Main = () => {
     y * y +
     25 * (Math.sin(x) * Math.sin(x) + Math.sin(y) * Math.sin(y));
 
-  const michalewicz = (x, y, m) => {
+  const michalewicz = (x, y, m = 10) => {
     let val = 0.0;
     const first = Math.sin((x * x) / Math.PI);
     val += Math.sin(x) * Math.pow(first, 2.0 * m);
@@ -87,19 +79,50 @@ const Main = () => {
     0.4 * Math.cos(4 * Math.PI * y) +
     0.7;
 
+  const plotData = (type) => {
+    let x, y, fun;
+    if (type === options[0]) {
+      x = range(-10, 10);
+      y = range(-10, 10);
+      fun = mcCormick;
+    }
+    if (type === options[1]) {
+      x = range(-10, 10);
+      y = range(-10, 10);
+      fun = eggCrate;
+    }
+    if (type === options[2]) {
+      x = range(-20, 20);
+      y = range(-20, 20);
+      fun = michalewicz;
+    }
+    if (type === options[3]) {
+      x = range(-20, 20);
+      y = range(-20, 20);
+      fun = easom;
+    }
+    if (type === options[4]) {
+      x = range(-20, 20);
+      y = range(-20, 20);
+      fun = bohachevsky;
+    }
 
-  const traces = Array(3)
-    .fill(0)
-    .map((_, i) => {
-      const { index, arr } = randomValues(20, 3);
-      return {
-        x: Array(20).fill(i),
-        y: index,
-        z: arr,
-        type: 'scatter3d',
-        mode: 'lines',
-      };
+    const z = [];
+    x.forEach((row) => {
+      const rowData = [];
+      y.forEach((col) => {
+        rowData.push(fun(row, col));
+      });
+      z.push(rowData);
     });
+
+    return [
+      {
+        z: z,
+        type: 'surface',
+      },
+    ];
+  };
 
   return (
     <div className='main'>
@@ -305,16 +328,6 @@ const Main = () => {
           <div className='metadata-best' id='metadata'>
             [Results]
           </div>
-          <div className='metadata-plot' id='plot'>
-            <Plot
-              data={traces}
-              layout={{
-                width: 900,
-                height: 800,
-                title: `Simple 3D Scatter`,
-              }}
-            />
-          </div>
         </div>
         <div className='settings'>
           <label>
@@ -373,6 +386,18 @@ const Main = () => {
       </div>
       <div className='row'>
         <button onClick={() => runAlgorithm()}>Run algorithm</button>
+      </div>
+      <div className='row'>
+        <div className='metadata-plot' id='plot'>
+          <Plot
+            data={plotData(fun)}
+            layout={{
+              width: 900,
+              height: 800,
+              title: `Simple 3D Scatter`,
+            }}
+          />
+        </div>
       </div>
       <ul className='results' id='results'></ul>
     </div>
