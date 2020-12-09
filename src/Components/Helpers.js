@@ -31,7 +31,6 @@ export const createBestItem = (name) => {
 };
 
 export const onCalculate = (state) => {
-  console.log(state);
 
   document.querySelector('#results').appendChild(
     createResultItem(

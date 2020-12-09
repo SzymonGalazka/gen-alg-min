@@ -13,7 +13,8 @@ import Plot from 'react-plotly.js';
 // const Plot = createPlotlyComponent(Plotly);
 
 const Main = () => {
-  const [fun, setFun] = useState('mcCormick');
+  const [bestGen, setBestGen] = useState([]);
+  const [fun, setFun] = useState('easom');
   const [cormickX, setCormickX] = useState([-1.5, 4]);
   const [cormickY, setCormickY] = useState([-3, 4]);
   const [eggX, setEggX] = useState([-5, 5]);
@@ -40,16 +41,34 @@ const Main = () => {
   ];
 
   const runAlgorithm = () => {
+    setBestGen([]);
     document.querySelector('#metadata').innerHTML = '[Results]';
     if (fun === options[0])
-      mcCormickGA(-1.9133, mcCormick, cormickX, cormickY, settings);
-    if (fun === options[1]) eggGA(0.0, eggCrate, eggX, eggY, settings);
+      mcCormickGA(-1.9133, mcCormick, cormickX, cormickY, settings, setBestGen);
+    if (fun === options[1])
+      eggGA(0.0, eggCrate, eggX, eggY, settings, setBestGen);
     if (fun === options[2])
-      michalewiczGA(-1.8013, michalewicz, michalewiczX, michalewiczY, settings);
-    if (fun === options[3]) mcCormickGA(-1, easom, easomX, easomY, settings);
+      michalewiczGA(
+        -1.8013,
+        michalewicz,
+        michalewiczX,
+        michalewiczY,
+        settings,
+        setBestGen
+      );
+    if (fun === options[3])
+      mcCormickGA(-1, easom, easomX, easomY, settings, setBestGen);
     if (fun === options[4])
-      bochachevskyGA(0.0, bohachevsky, bohachevskyX, bohachevskyY, settings);
+      bochachevskyGA(
+        0.0,
+        bohachevsky,
+        bohachevskyX,
+        bohachevskyY,
+        settings,
+        setBestGen
+      );
   };
+
   const mcCormick = (x, y) =>
     Math.sin(x + y) + (x - y) * (x - y) + 1.0 + 2.5 * y - 1.5 * x;
 
@@ -80,20 +99,20 @@ const Main = () => {
     0.7;
 
   const plotData = (type) => {
-    let x, y, fun;
+    let x, y, fun, topX, topY, topZ;
     if (type === options[0]) {
-      x = range(-10, 10);
-      y = range(-10, 10);
+      x = range(cormickX[0], cormickX[1]);
+      y = range(cormickY[0], cormickY[1]);
       fun = mcCormick;
     }
     if (type === options[1]) {
-      x = range(-10, 10);
-      y = range(-10, 10);
+      x = range(-20, 20);
+      y = range(-20, 20);
       fun = eggCrate;
     }
     if (type === options[2]) {
-      x = range(-20, 20);
-      y = range(-20, 20);
+      x = range(-20, 5);
+      y = range(-20, 5);
       fun = michalewicz;
     }
     if (type === options[3]) {
@@ -116,14 +135,38 @@ const Main = () => {
       z.push(rowData);
     });
 
+    if (type === options[0]) {
+      topX = bestGen.map((top) => top.dna[0].genes[0] + 2);
+      topY = bestGen.map((top) => top.dna[1].genes[0] + 2.5);
+      topZ = bestGen.map((top) =>
+        fun(top.dna[0].genes[0], top.dna[1].genes[0])
+      );
+    } else if ((type === options[2])) {
+      topX = bestGen.map((top) => top.dna[0].genes[0] + 6.5);
+      topY = bestGen.map((top) => top.dna[1].genes[0] + 13);
+      topZ = bestGen.map((top) =>
+        fun(top.dna[0].genes[0], top.dna[1].genes[0])
+      );
+    } else {
+      topX = bestGen.map((top) => top.dna[0].genes[0] + 20);
+      topY = bestGen.map((top) => top.dna[1].genes[0] + 20);
+      topZ = bestGen.map((top) =>
+        fun(top.dna[0].genes[0], top.dna[1].genes[0])
+      );
+    }
     return [
       {
         z: z,
         type: 'surface',
       },
+      {
+        x: topX,
+        y: topY,
+        z: topZ,
+        type: 'scatter3d',
+      },
     ];
   };
-
   return (
     <div className='main'>
       <div className='row'>
@@ -131,6 +174,7 @@ const Main = () => {
         <Dropdown
           options={options}
           onChange={(option) => {
+            setBestGen([]);
             document.querySelector('#metadata').innerHTML = '[Results]';
             document.querySelector('#results').innerHTML = '';
             setFun(option.value);
@@ -392,11 +436,15 @@ const Main = () => {
           <Plot
             data={plotData(fun)}
             layout={{
-              width: 900,
-              height: 800,
-              title: `Simple 3D Scatter`,
+              width: 800,
+              height: 700,
+              title: `${fun} plot with unique TOP individuals`,
             }}
           />
+          <h5>
+            Note: Axis X and Axis Y on the chart are shifted so that the plot
+            always starts in [0,0] (only positive values).
+          </h5>
         </div>
       </div>
       <ul className='results' id='results'></ul>

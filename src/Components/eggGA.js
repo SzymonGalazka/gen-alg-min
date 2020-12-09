@@ -1,8 +1,15 @@
-import { round, createBestItem, createResultItem, onCalculate } from './Helpers';
+import { onCalculate } from './Helpers';
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
 
-const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
+const eggGA = (
+  target,
+  testedFun,
+  x1boundary,
+  x2boundary,
+  settings,
+  setBestGen
+) => {
   document.querySelector('#results').innerHTML = '';
   class GlobalMinFinder extends Simulation {
     calculateFitness(individual, data) {
@@ -42,6 +49,9 @@ const eggGA = (target, testedFun, x1boundary, x2boundary, settings) => {
     crossover: genie.ga.Crossover.singlePoint,
     onCalculateFitness(state) {
       onCalculate(state);
+      if (!state.history.some((top) => top.topFitness === state.top.fitness)) {
+        setBestGen((arr) => [...arr, state.top]);
+      }
     },
   };
 

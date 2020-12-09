@@ -1,9 +1,4 @@
-import {
-  round,
-  createBestItem,
-  createResultItem,
-  onCalculate,
-} from './Helpers';
+import { onCalculate } from './Helpers';
 const genie = require('@adrianperea/genie.js');
 const { Simulation, Individual, Chromosome } = genie;
 
@@ -12,7 +7,8 @@ const bochachevskyGA = (
   testedFun,
   x1boundary,
   x2boundary,
-  settings
+  settings,
+  setBestGen
 ) => {
   document.querySelector('#results').innerHTML = '';
   class GlobalMinFinder extends Simulation {
@@ -56,6 +52,9 @@ const bochachevskyGA = (
     crossover: genie.ga.Crossover.multipoint,
     onCalculateFitness(state) {
       onCalculate(state);
+      if (!state.history.some((top) => top.topFitness === state.top.fitness)) {
+        setBestGen((arr) => [...arr, state.top]);
+      }
     },
   };
 
