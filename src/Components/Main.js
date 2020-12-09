@@ -101,8 +101,8 @@ const Main = () => {
   const plotData = (type) => {
     let x, y, fun, topX, topY, topZ;
     if (type === options[0]) {
-      x = range(cormickX[0], cormickX[1]);
-      y = range(cormickY[0], cormickY[1]);
+      x = range(-1.5, 4);
+      y = range(-3, 4);
       fun = mcCormick;
     }
     if (type === options[1]) {
@@ -141,7 +141,7 @@ const Main = () => {
       topZ = bestGen.map((top) =>
         fun(top.dna[0].genes[0], top.dna[1].genes[0])
       );
-    } else if ((type === options[2])) {
+    } else if (type === options[2]) {
       topX = bestGen.map((top) => top.dna[0].genes[0] + 6.5);
       topY = bestGen.map((top) => top.dna[1].genes[0] + 13);
       topZ = bestGen.map((top) =>
@@ -201,7 +201,7 @@ const Main = () => {
               />
             </label>
             <label>
-              x2
+              y
               <input
                 type='number'
                 value={cormickY[0]}
@@ -234,7 +234,7 @@ const Main = () => {
               />
             </label>
             <label>
-              x2
+              y
               <input
                 type='number'
                 value={eggY[0]}
@@ -271,7 +271,7 @@ const Main = () => {
               />
             </label>
             <label>
-              x2
+              y
               <input
                 type='number'
                 value={michalewiczY[0]}
@@ -308,7 +308,7 @@ const Main = () => {
               />
             </label>
             <label>
-              x2
+              y
               <input
                 type='number'
                 value={easomY[0]}
@@ -345,7 +345,7 @@ const Main = () => {
               />
             </label>
             <label>
-              x2
+              y
               <input
                 type='number'
                 value={bohachevskyY[0]}
