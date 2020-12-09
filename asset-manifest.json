@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/gen-alg-min/static/css/main.7fb49dab.chunk.css",
-    "main.js": "/gen-alg-min/static/js/main.4b3a279d.chunk.js",
-    "main.js.map": "/gen-alg-min/static/js/main.4b3a279d.chunk.js.map",
-    "runtime-main.js": "/gen-alg-min/static/js/runtime-main.856c5a96.js",
-    "runtime-main.js.map": "/gen-alg-min/static/js/runtime-main.856c5a96.js.map",
+    "main.css": "/gen-alg-min/static/css/main.cf0ab428.chunk.css",
+    "main.js": "/gen-alg-min/static/js/main.92cb4ccc.chunk.js",
+    "main.js.map": "/gen-alg-min/static/js/main.92cb4ccc.chunk.js.map",
+    "runtime-main.js": "/gen-alg-min/static/js/runtime-main.88a0e6d3.js",
+    "runtime-main.js.map": "/gen-alg-min/static/js/runtime-main.88a0e6d3.js.map",
     "static/css/2.fe708519.chunk.css": "/gen-alg-min/static/css/2.fe708519.chunk.css",
-    "static/js/2.54608b25.chunk.js": "/gen-alg-min/static/js/2.54608b25.chunk.js",
-    "static/js/2.54608b25.chunk.js.map": "/gen-alg-min/static/js/2.54608b25.chunk.js.map",
-    "static/js/3.db91c567.chunk.js": "/gen-alg-min/static/js/3.db91c567.chunk.js",
-    "static/js/3.db91c567.chunk.js.map": "/gen-alg-min/static/js/3.db91c567.chunk.js.map",
+    "static/js/2.54a5ff3e.chunk.js": "/gen-alg-min/static/js/2.54a5ff3e.chunk.js",
+    "static/js/2.54a5ff3e.chunk.js.map": "/gen-alg-min/static/js/2.54a5ff3e.chunk.js.map",
+    "static/js/3.1195bc95.chunk.js": "/gen-alg-min/static/js/3.1195bc95.chunk.js",
+    "static/js/3.1195bc95.chunk.js.map": "/gen-alg-min/static/js/3.1195bc95.chunk.js.map",
     "index.html": "/gen-alg-min/index.html",
     "static/css/2.fe708519.chunk.css.map": "/gen-alg-min/static/css/2.fe708519.chunk.css.map",
-    "static/css/main.7fb49dab.chunk.css.map": "/gen-alg-min/static/css/main.7fb49dab.chunk.css.map",
-    "static/js/2.54608b25.chunk.js.LICENSE.txt": "/gen-alg-min/static/js/2.54608b25.chunk.js.LICENSE.txt"
+    "static/css/main.cf0ab428.chunk.css.map": "/gen-alg-min/static/css/main.cf0ab428.chunk.css.map",
+    "static/js/2.54a5ff3e.chunk.js.LICENSE.txt": "/gen-alg-min/static/js/2.54a5ff3e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.856c5a96.js",
+    "static/js/runtime-main.88a0e6d3.js",
     "static/css/2.fe708519.chunk.css",
-    "static/js/2.54608b25.chunk.js",
-    "static/css/main.7fb49dab.chunk.css",
-    "static/js/main.4b3a279d.chunk.js"
+    "static/js/2.54a5ff3e.chunk.js",
+    "static/css/main.cf0ab428.chunk.css",
+    "static/js/main.92cb4ccc.chunk.js"
   ]
 }
